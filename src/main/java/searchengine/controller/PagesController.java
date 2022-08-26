@@ -1,10 +1,8 @@
 package searchengine.controller;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.*;
 import searchengine.dto.PageDto;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import searchengine.entity.PageEntity;
 import searchengine.service.impl.PagesServiceImpl;
 
@@ -20,9 +18,14 @@ public class PagesController {
         return pagesService.getAllPages();
     }
 
+    @PostMapping(value = "/api/startIndexing")
+    public void saveAllPages(@RequestBody String url) {
+        pagesService.saveAllPages(url);
+    }
+
     @GetMapping(value = "/api/startIndexing")
-    public void saveAllPages() {
-        pagesService.saveAllPages();
+    public void saveAllData() {
+        pagesService.saveAllPagesFromSiteList();
     }
 
     @DeleteMapping(value = "/api/clearPages")

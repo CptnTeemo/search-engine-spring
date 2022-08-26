@@ -5,9 +5,20 @@ spring:
     password: testtest
   jpa:
     hibernate:
-      ddl-auto: none
-#  sites:
+      ddl-auto: create-drop
+
+config:
+  site:
+    - url: https://www.svetlovka.ru
+      name: Библиотека Светловка
+
+    - url: https://dombulgakova.ru
+      name: Дом Булгакова
+
+    - url: http://www.playback.ru/
+      name: Телефоны
 #    - url: https://www.lenta.ru
 #      name: Лента.ру
+#
 #    - url: https://www.skillbox.ru
 #      name: Skillbox

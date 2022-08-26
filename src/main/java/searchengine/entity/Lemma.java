@@ -31,6 +31,9 @@ public class Lemma implements Comparable<Lemma> {
     @OneToMany(mappedBy = "lemma", cascade =
             {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
     private Set<IndexEntity> indexes = new HashSet<>();
+//    @ManyToOne
+//    @JoinColumn(name = "site_id")
+//    private Site site;
 
 //    @Column(name = "site_id", nullable = false)
 //    private int siteId;

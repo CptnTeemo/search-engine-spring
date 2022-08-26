@@ -29,6 +29,10 @@ public class PageEntity {
             fetch = FetchType.LAZY) //TODO: выбрать вариант, проверить Lazy
     private Set<IndexEntity> indexes = new HashSet<>();
 
+//    @ManyToOne
+//    @JoinColumn(name = "site_id")
+//    private Site site;
+
     public PageEntity() {
     }
 

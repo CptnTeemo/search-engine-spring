@@ -1,99 +1,81 @@
 package searchengine.utils;
 
-import searchengine.dto.PageDto;
-import searchengine.dto.SiteDto;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import searchengine.dto.PageDto;
+import searchengine.dto.SiteDto;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.RecursiveTask;
 
+@Slf4j
 public class LinkCollector extends RecursiveTask<Set<PageDto>> {
 
     private String path;
-    public static String mainPath = PageDto.getPath();
-    private static final String PATH = "./data/";
     private PageDto pageDto;
-    private SiteDto siteDto;
+    private final SiteDto siteDto;
     private static Map<String, PageDto> pagesCollection = new HashMap<>();
-
-//    public LinkCollector(String path) {
-//        this.path = path;
-//    }
 
     public LinkCollector(String path, SiteDto siteDto) {
         this.path = path;
         this.siteDto = siteDto;
     }
 
-    public static void setMainPath(String mainPath) {
-        LinkCollector.mainPath = mainPath;
-    }
 
+    @SneakyThrows
     @Override
     protected Set<PageDto> compute() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        Document document = null;
-        if (!path.matches("(http|https)(.*)") & !path.contains(mainPath)) {
-//            return new ArrayList<>();
-            return new TreeSet<>();
-        }
-        try {
-            document = Jsoup.connect(path)
-                    .userAgent("Mozilla/5.0 (Windows; U; WindowsNT" +
-                            "5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
-                    .referrer("http://www.google.com")
-                    .get();
-            Connection.Response response = Jsoup.connect(path)
-                    .userAgent("Mozilla/5.0 (Windows; U; WindowsNT" +
-                            "5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
-                    .referrer("http://www.google.com")
-                    .execute();
-//            System.out.println(response.statusCode());
+        Document document = getConnect(path);
+            Thread.sleep(250);
 
+        if (document != null) {
+            Elements linkList = document.select("a");
+            List<LinkCollector> tasks = new ArrayList<>();
+            Set<PageDto> siteMap = new TreeSet<>();
+            Connection.Response response = document.connection().response();
+            Integer statusCode = response.statusCode();
+            String getUrl = siteDto.getUrl() + "(.*)";
+            PageDto pageDto =
+                    new PageDto(path.replaceAll(getUrl, "/"+"$1"),
+                            document.html(), statusCode, siteDto.getId());
 
-            if (document != null) {
+            pagesCollection.put(path, pageDto);
 
-                Elements linkList = document.select("a");
-                List<LinkCollector> tasks = new ArrayList<>();
-                Set<PageDto> siteMap = new TreeSet<>();
-                Integer statusCode = response.statusCode();
-                String getUrl = mainPath + "(.*)";
-                PageDto pageDto =
-                        new PageDto(path.replaceAll(getUrl, "/"+"$1"),
-                                document.html(), statusCode, siteDto.getId());
-
-                pagesCollection.put(path, pageDto);
-
-                Set<String> hrefList = linksCollector(linkList, path);
-                if (hrefList.size() > 0) {
-                    hrefList.forEach(e -> {
-                        LinkCollector webSiteMapCreator = new LinkCollector(e, siteDto);
-                        webSiteMapCreator.fork();
-                        tasks.add(webSiteMapCreator);
-                    });
-//                    siteMap.add(new WebSiteElementInfo(path, document.html()));
-//                    siteMap.addAll(hrefList);
-                }
-                Set<Map.Entry<String, PageDto>> entrySet = pagesCollection.entrySet();
-                entrySet.forEach(e -> siteMap.add(e.getValue()));
-
-                addResultsFromTasks(siteMap, tasks);
-                return new TreeSet<>(siteMap);
+            Set<String> hrefList = linksCollector(linkList, path);
+            if (hrefList.size() > 0) {
+                hrefList.forEach(e -> {
+                    LinkCollector webSiteMapCreator = new LinkCollector(e, siteDto);
+                    webSiteMapCreator.fork();
+                    tasks.add(webSiteMapCreator);
+                });
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            Set<Map.Entry<String, PageDto>> entrySet = pagesCollection.entrySet();
+            entrySet.forEach(e -> siteMap.add(e.getValue()));
+
+            addResultsFromTasks(siteMap, tasks);
+            return new TreeSet<>(siteMap);
         }
         return new TreeSet<>();
     }
 
+    public Document getConnect(String url) {
+        Document doc = null;
+        try {
+            Thread.sleep(150);
+            doc = Jsoup.connect(url)
+                    .userAgent("Mozilla/5.0 (Windows; U; WindowsNT" +
+                            "5.1; en-US; rv1.8.1.6) Gecko/20070725 Firefox/2.0.0.6")
+                    .referrer("http://www.google.com")
+                    .get();
+        } catch (Exception e) {
+            log.info("Не удалось установить подключение с " + url);
+        }
+        return doc;
+    }
 
     private void addResultsFromTasks(Set<PageDto> list, List<LinkCollector> tasks) {
         for (LinkCollector item : tasks) {
