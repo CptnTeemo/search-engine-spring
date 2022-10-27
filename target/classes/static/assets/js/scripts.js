@@ -1452,8 +1452,12 @@ var API = function(){
                 if (result.status===200) {
                     cb(result.responseJSON, $this, data);
                 } else {
-                    alert('Ошибка ' + result.status);
+                    let text = result.responseText
+                    alert('Ошибка: ' + text.slice(25, text.length - 2));
                 }
+//                else {
+//                    alert('Ошибка ' + result.status);
+//                }
             }
         });
     }

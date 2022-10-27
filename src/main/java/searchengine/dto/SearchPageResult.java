@@ -1,41 +1,25 @@
 package searchengine.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class SearchPageResult implements Comparable<SearchPageResult>{
 
-    private String uri;
-    private String title;
-    private double relevance;
+    String site;
+    String siteName;
+    String uri;
+    String title;
+    String snippet;
+    Float relevance;
 
-    public SearchPageResult() {
-    }
-
-    public SearchPageResult(String uri, String title, double relevance) {
+    public SearchPageResult(String site, String siteName, String uri, String title, String snippet, Float relevance) {
+        this.site = site;
+        this.siteName = siteName;
         this.uri = uri;
         this.title = title;
-        this.relevance = relevance;
-    }
-
-    public String getUri() {
-        return uri;
-    }
-
-    public void setUri(String uri) {
-        this.uri = uri;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public double getRelevance() {
-        return relevance;
-    }
-
-    public void setRelevance(double relevance) {
+        this.snippet = snippet;
         this.relevance = relevance;
     }
 
@@ -52,7 +36,7 @@ public class SearchPageResult implements Comparable<SearchPageResult>{
 
     @Override
     public String toString() {
-        return getUri() + " || " + getTitle() + "\n" +
+        return getUri() + " || " + getTitle() + " || " + getSnippet() + "\n" +
                 getRelevance();
     }
 }

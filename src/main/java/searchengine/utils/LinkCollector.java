@@ -16,50 +16,57 @@ import java.util.concurrent.RecursiveTask;
 public class LinkCollector extends RecursiveTask<Set<PageDto>> {
 
     private String path;
-    private PageDto pageDto;
+//    private PageDto pageDto;
     private final SiteDto siteDto;
-    private static Map<String, PageDto> pagesCollection = new HashMap<>();
+    private final Set<PageDto> pagesCollection;
 
-    public LinkCollector(String path, SiteDto siteDto) {
+    public LinkCollector(String path, SiteDto siteDto, Set<PageDto> pagesCollection) {
         this.path = path;
         this.siteDto = siteDto;
+        this.pagesCollection = pagesCollection;
     }
 
 
     @SneakyThrows
     @Override
     protected Set<PageDto> compute() {
+        Thread.sleep(250);
         Document document = getConnect(path);
-            Thread.sleep(250);
+        String getUrl = siteDto.getUrl() + "(.*)";
+        List<LinkCollector> tasks = new ArrayList<>();
+        Set<PageDto> siteMap = new TreeSet<>();
+
 
         if (document != null) {
+            Map<String, PageDto> pagesCollectionMap = new HashMap<>();
             Elements linkList = document.select("a");
-            List<LinkCollector> tasks = new ArrayList<>();
-            Set<PageDto> siteMap = new TreeSet<>();
             Connection.Response response = document.connection().response();
             Integer statusCode = response.statusCode();
-            String getUrl = siteDto.getUrl() + "(.*)";
             PageDto pageDto =
                     new PageDto(path.replaceAll(getUrl, "/"+"$1"),
                             document.html(), statusCode, siteDto.getId());
 
-            pagesCollection.put(path, pageDto);
+            pagesCollectionMap.put(path, pageDto);
 
             Set<String> hrefList = linksCollector(linkList, path);
             if (hrefList.size() > 0) {
                 hrefList.forEach(e -> {
-                    LinkCollector webSiteMapCreator = new LinkCollector(e, siteDto);
+                    LinkCollector webSiteMapCreator = new LinkCollector(e, siteDto, pagesCollection);
                     webSiteMapCreator.fork();
                     tasks.add(webSiteMapCreator);
                 });
             }
-            Set<Map.Entry<String, PageDto>> entrySet = pagesCollection.entrySet();
+            Set<Map.Entry<String, PageDto>> entrySet = pagesCollectionMap.entrySet();
             entrySet.forEach(e -> siteMap.add(e.getValue()));
 
             addResultsFromTasks(siteMap, tasks);
-            return new TreeSet<>(siteMap);
         }
-        return new TreeSet<>();
+        else {
+            log.debug("Ошибка парсинга - " + getUrl);
+            siteMap.add(new PageDto(path.replaceAll(getUrl, "/"+"$1"),
+                    "", 500, siteDto.getId()));
+        }
+        return new TreeSet<>(siteMap);
     }
 
     public Document getConnect(String url) {
@@ -88,7 +95,9 @@ public class LinkCollector extends RecursiveTask<Set<PageDto>> {
         elements.forEach(e -> {
             String subPath = e.attr("abs:href");
             if (subPath.contains(path) && !subPath.equals(path) &&
-                    !subPath.contains("#") && !subPath.contains(".pdf")) {
+                    !subPath.contains("#") && !subPath.contains(".pdf")
+                    && !subPath.toLowerCase(Locale.ROOT).contains(".jpg")
+                    && !subPath.toLowerCase(Locale.ROOT).contains(".png")) {
                 hrefList.add(subPath);
             }
         });

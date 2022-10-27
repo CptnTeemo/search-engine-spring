@@ -1,38 +1,42 @@
 package searchengine.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+import searchengine.entity.IndexEntity;
+import searchengine.entity.Lemma;
+import searchengine.entity.PageEntity;
+
+import java.util.Objects;
+
+@Getter
+@Setter
 public class IndexDto {
 
-    private String url;
-    private String lemma;
+    private Integer pageId;
+    private Integer lemmaId;
     private float rank;
+    private Integer id;
 
-    public IndexDto(String url, String lemma, float rank) {
-        this.url = url;
-        this.lemma = lemma;
+    public IndexDto() {
+    }
+
+    public IndexDto(Integer pageId, Integer lemmaId, float rank) {
+        this.pageId = pageId;
+        this.lemmaId = lemmaId;
         this.rank = rank;
+        this.id = hashCode();
     }
 
-    public String getUrl() {
-        return url;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IndexDto that = (IndexDto) o;
+        return Objects.equals(pageId, that.pageId) && Objects.equals(lemmaId, that.lemmaId);
     }
 
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getLemma() {
-        return lemma;
-    }
-
-    public void setLemma(String lemma) {
-        this.lemma = lemma;
-    }
-
-    public float getRank() {
-        return rank;
-    }
-
-    public void setRank(float rank) {
-        this.rank = rank;
+    @Override
+    public int hashCode() {
+        return Objects.hash(pageId, lemmaId);
     }
 }

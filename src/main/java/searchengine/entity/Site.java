@@ -13,7 +13,6 @@ import java.util.List;
 @Table(name = "site")
 public class Site {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -24,9 +23,9 @@ public class Site {
     private String url;
     private String name;
 
-//    @OneToMany(mappedBy = "site", cascade = CascadeType.ALL)
-//    private List<PageEntity> page;
-//
-//    @OneToMany(mappedBy = "site", cascade = CascadeType.ALL)
-//    private List<Lemma> lemma;
+    @OneToMany(mappedBy = "site", cascade = CascadeType.ALL)
+    private List<PageEntity> page;
+
+    @OneToMany(mappedBy = "site", cascade = CascadeType.ALL)
+    private List<Lemma> lemma;
 }

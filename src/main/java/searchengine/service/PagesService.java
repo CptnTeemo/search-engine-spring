@@ -7,7 +7,7 @@ import java.util.List;
 public interface PagesService {
 
     List<PageDto> getAllPages();
-    void saveAllPages(String url);
-    void saveAllPagesFromSiteList();
+    boolean saveDataFromUrl(String url);
+    boolean saveAllPagesFromSiteList();
     void deleteAllPages();
 }

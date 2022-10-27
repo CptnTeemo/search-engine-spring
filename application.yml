@@ -3,6 +3,8 @@ spring:
     url: jdbc:mysql://localhost:3306/search_engine?allowPublicKeyRetrieval=true&useSSL=false
     username: root
     password: testtest
+#    data: classpath:data.sql
+#    initialization-mode: always
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -17,6 +19,7 @@ config:
 
     - url: http://www.playback.ru/
       name: Телефоны
+
 #    - url: https://www.lenta.ru
 #      name: Лента.ру
 #

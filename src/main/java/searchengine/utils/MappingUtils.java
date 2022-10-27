@@ -1,7 +1,9 @@
 package searchengine.utils;
 
+import searchengine.dto.IndexDto;
 import searchengine.dto.LemmaDto;
 import searchengine.dto.PageDto;
+import searchengine.entity.IndexEntity;
 import searchengine.entity.Lemma;
 import searchengine.entity.PageEntity;
 
@@ -28,7 +30,17 @@ public class MappingUtils {
         lemma.setLemma(lemmaDto.getLemma());
         lemma.setId(lemmaDto.getId());
         lemma.setFrequency(lemmaDto.getFrequency());
+        lemma.setSiteId(lemmaDto.getSiteId());
         return lemma;
+    }
+
+    public static IndexEntity indexDtoToIndexEntity(IndexDto indexDto) {
+        IndexEntity indexEntity = new IndexEntity();
+        indexEntity.setLemmaId(indexDto.getLemmaId());
+        indexEntity.setPageId(indexDto.getPageId());
+        indexEntity.setRank(indexDto.getRank());
+        indexEntity.setId(indexDto.getId());
+        return indexEntity;
     }
 
 }

@@ -1,5 +1,7 @@
 package searchengine.entity;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.SQLInsert;
 
 import javax.persistence.*;
@@ -8,15 +10,9 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(
-        name = "lemma"
-//        ,
-//        indexes = {
-//                @javax.persistence.Index(name = "LEMMA_IDX0", columnList = "lemma, site_id", unique = true) },
-//        uniqueConstraints = {@UniqueConstraint(name = "UniqueLemmaAndSiteId", columnNames = {"lemma", "site_id"})}
-)
-@SQLInsert(sql = "INSERT INTO lemma(frequency, lemma, site_id, id) VALUES (?, ?, ?, ?)" +
-        "ON DUPLICATE KEY UPDATE frequency = frequency + 1")
+@Getter
+@Setter
+@Table(name = "lemma")
 public class Lemma implements Comparable<Lemma> {
 
     @Id
@@ -28,15 +24,11 @@ public class Lemma implements Comparable<Lemma> {
     private int frequency;
     @Column(name = "site_id")
     private Integer siteId;
-    @OneToMany(mappedBy = "lemma", cascade =
-            {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "site_id", insertable = false, updatable = false)
+    private Site site;
+    @OneToMany(mappedBy = "lemma", cascade = CascadeType.ALL)
     private Set<IndexEntity> indexes = new HashSet<>();
-//    @ManyToOne
-//    @JoinColumn(name = "site_id")
-//    private Site site;
-
-//    @Column(name = "site_id", nullable = false)
-//    private int siteId;
 
     public Lemma() {
     }
@@ -48,80 +40,17 @@ public class Lemma implements Comparable<Lemma> {
         this.id = hashCode();
     }
 
-    //    public Lemma(String lemma, int frequency, int siteId) {
-    public Lemma(String lemma, int frequency) {
-        this.lemma = lemma;
-        this.frequency = frequency;
-//        this.siteId = siteId;
-        this.id = hashCode();
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getLemma() {
-        return lemma;
-    }
-
-    public void setLemma(String lemma) {
-        this.lemma = lemma;
-    }
-
-    public int getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(int frequency) {
-        this.frequency = frequency;
-    }
-
-    public Set<IndexEntity> getIndexes() {
-        return indexes;
-    }
-
-    public void setIndexes(Set<IndexEntity> indexes) {
-        this.indexes = indexes;
-    }
-
-//    public int getSiteId() {
-//        return siteId;
-//    }
-
-//    public void setSiteId(int siteId) {
-//        this.siteId = siteId;
-//    }
-
-//    @Override
-//    public boolean equals(Object o) {
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
-//        Lemma lemma1 = (Lemma) o;
-//        return siteId == lemma1.siteId &&
-//                Objects.equals(lemma, lemma1.lemma);
-//    }
-//
-//    @Override
-//    public int hashCode() {
-//        return Objects.hash(lemma, siteId);
-//    }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Lemma lemma1 = (Lemma) o;
-        return Objects.equals(lemma, lemma1.lemma);
+        return Objects.equals(lemma, lemma1.lemma) && Objects.equals(siteId, lemma1.siteId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(lemma);
+        return Objects.hash(lemma, siteId);
     }
 
     @Override

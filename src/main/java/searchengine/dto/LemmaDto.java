@@ -1,53 +1,26 @@
 package searchengine.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Objects;
 
+@Getter
+@Setter
 public class LemmaDto implements Comparable<LemmaDto>{
     private int id;
     private String lemma;
     private int frequency;
-    private int pageId;
+    private int siteId;
 
     public LemmaDto() {
     }
 
-    public LemmaDto(int id, String lemma, int frequency, int pageId) {
-        this.id = id;
+    public LemmaDto(String lemma, Integer frequency, Integer siteId) {
         this.lemma = lemma;
+        this.siteId = siteId;
         this.frequency = frequency;
-        this.pageId = pageId;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getLemma() {
-        return lemma;
-    }
-
-    public void setLemma(String lemma) {
-        this.lemma = lemma;
-    }
-
-    public int getFrequency() {
-        return frequency;
-    }
-
-    public void setFrequency(int frequency) {
-        this.frequency = frequency;
-    }
-
-    public int getPageId() {
-        return pageId;
-    }
-
-    public void setPageId(int pageId) {
-        this.pageId = pageId;
+        this.id = hashCode();
     }
 
     @Override
@@ -55,12 +28,12 @@ public class LemmaDto implements Comparable<LemmaDto>{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LemmaDto lemmaDto = (LemmaDto) o;
-        return Objects.equals(lemma, lemmaDto.lemma);
+        return siteId == lemmaDto.siteId && Objects.equals(lemma, lemmaDto.lemma);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(lemma);
+        return Objects.hash(lemma, siteId);
     }
 
     @Override

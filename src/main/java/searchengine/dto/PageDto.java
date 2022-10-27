@@ -1,7 +1,12 @@
 package searchengine.dto;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.Objects;
 
+@Getter
+@Setter
 public class PageDto implements Comparable<PageDto> {
 
     private static String path;
@@ -17,54 +22,6 @@ public class PageDto implements Comparable<PageDto> {
         this.statusCode = statusCode;
         this.siteId = siteId;
         this.id = hashCode();
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public void setHtml(String html) {
-        this.html = html;
-    }
-
-    public void setStatusCode(Integer statusCode) {
-        this.statusCode = statusCode;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getHtml() {
-        return html;
-    }
-
-    public Integer getStatusCode() {
-        return statusCode;
-    }
-
-    public static String getPath() {
-        return path;
-    }
-
-    public static void setPath(String path) {
-        PageDto.path = path;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getSiteId() {
-        return siteId;
-    }
-
-    public void setSiteId(Integer siteId) {
-        this.siteId = siteId;
     }
 
     @Override
