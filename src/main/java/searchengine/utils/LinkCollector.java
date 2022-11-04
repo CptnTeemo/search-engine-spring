@@ -16,7 +16,6 @@ import java.util.concurrent.RecursiveTask;
 public class LinkCollector extends RecursiveTask<Set<PageDto>> {
 
     private String path;
-//    private PageDto pageDto;
     private final SiteDto siteDto;
     private final Set<PageDto> pagesCollection;
 
@@ -43,8 +42,7 @@ public class LinkCollector extends RecursiveTask<Set<PageDto>> {
             Connection.Response response = document.connection().response();
             Integer statusCode = response.statusCode();
             PageDto pageDto =
-                    new PageDto(path.replaceAll(getUrl, "/"+"$1"),
-                            document.html(), statusCode, siteDto.getId());
+                    new PageDto(modUrl(getUrl, path), document.html(), statusCode, siteDto.getId());
 
             pagesCollectionMap.put(path, pageDto);
 
@@ -63,7 +61,7 @@ public class LinkCollector extends RecursiveTask<Set<PageDto>> {
         }
         else {
             log.debug("Ошибка парсинга - " + getUrl);
-            siteMap.add(new PageDto(path.replaceAll(getUrl, "/"+"$1"),
+            siteMap.add(new PageDto(modUrl(getUrl, path),
                     "", 500, siteDto.getId()));
         }
         return new TreeSet<>(siteMap);
@@ -82,6 +80,14 @@ public class LinkCollector extends RecursiveTask<Set<PageDto>> {
             log.info("Не удалось установить подключение с " + url);
         }
         return doc;
+    }
+
+    private String modUrl(String getUrl, String path) {
+        String modUrl = path.replaceAll(getUrl, "$1");
+        if (modUrl.isEmpty()) {
+            return "/";
+        }
+        return modUrl;
     }
 
     private void addResultsFromTasks(Set<PageDto> list, List<LinkCollector> tasks) {

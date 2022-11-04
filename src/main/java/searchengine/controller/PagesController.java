@@ -1,5 +1,6 @@
 package searchengine.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,9 +13,9 @@ import searchengine.service.impl.PagesServiceImpl;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 public class PagesController {
-    @Autowired
-    private PagesServiceImpl pagesService;
+    private final PagesServiceImpl pagesService;
 
     @GetMapping(value = "/")
     public List<PageDto> list() {
@@ -22,7 +23,7 @@ public class PagesController {
     }
 
     @PostMapping(value = "/indexPage")
-    public ResponseEntity<Object> saveDataByUrl(@RequestBody String url) {
+    public ResponseEntity<Object> saveDataByUrl(String url) {
         if (pagesService.saveDataFromUrl(url)) {
             return new ResponseEntity<>(new TrueResponse(true), HttpStatus.OK);
         } else return new ResponseEntity<>(new FalseResponse(false,
@@ -30,7 +31,6 @@ public class PagesController {
                 HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    //    @GetMapping(value = "/api/startIndexing")
     @GetMapping(value = "/startIndexing")
     public ResponseEntity<Object> saveAllData() {
         if (pagesService.saveAllPagesFromSiteList()) {

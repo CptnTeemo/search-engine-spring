@@ -56,7 +56,6 @@ public class SiteIndex implements Runnable {
         try {
             var pageDtoList = getAllPagesDto();
             log.info("пытаемся записать - " + url);
-            log.info(String.valueOf(pageDtoList.size()));
             savePagesToDataBase(pageDtoList);
             log.info("Приступаем к лемматизации - " + url);
             var lemmaCollectionMap = new HashMap<>(getLemmas(pageDtoList));

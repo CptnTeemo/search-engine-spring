@@ -56,7 +56,7 @@ public class PagesServiceImpl implements PagesService {
 
     @Override
     public boolean saveDataFromUrl(String url) {
-        if (urlCheck(url)) {
+        if (urlCheck(clearUrl(url))) {
             executorService = Executors.newFixedThreadPool(processorCoreCount);
             executorService.submit(new SiteIndex(pagesRepository,
                     lemmaRepository,
@@ -124,6 +124,11 @@ public class PagesServiceImpl implements PagesService {
             }
         }
         return false;
+    }
+
+    private String clearUrl(String url) {
+        String regex = "(http|https)(://.*)(.ru|.com)(\\/\\w|\\/\\d)(.*)";
+        return url.replaceAll(regex, "$1"+"$2"+"$3");
     }
 
     @Override

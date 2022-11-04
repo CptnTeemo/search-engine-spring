@@ -17,7 +17,7 @@ config:
     - url: https://dombulgakova.ru
       name: Дом Булгакова
 
-    - url: http://www.playback.ru/
+    - url: https://www.playback.ru
       name: Телефоны
 
 #    - url: https://www.lenta.ru

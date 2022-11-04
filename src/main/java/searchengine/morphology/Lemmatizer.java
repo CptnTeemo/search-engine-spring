@@ -34,9 +34,9 @@ public class Lemmatizer {
                     LemmaCollection lemma = new LemmaCollection(uniqueWordCounter(getTitleText(e.getHtml())),
                             uniqueWordCounter(getBodyText(e.getHtml())), e.getId(), e.getSiteId());
                     lemmaSet.put(e.getUrl(), lemma);
-                    if (lemmaSet.size() % 25 == 0) {
-                        log.info("Лемматизация в процессе - " + e.getUrl() + " " + e.getSiteId() + " " + e.getId());
-                    }
+//                    if (lemmaSet.size() % 25 == 0) {
+//                        log.info("Лемматизация в процессе - " + e.getUrl() + " " + e.getSiteId() + " " + e.getId());
+//                    }
         });
         return new HashMap<>(lemmaSet);
     }

@@ -1455,9 +1455,6 @@ var API = function(){
                     let text = result.responseText
                     alert('Ошибка: ' + text.slice(25, text.length - 2));
                 }
-//                else {
-//                    alert('Ошибка ' + result.status);
-//                }
             }
         });
     }
