@@ -31,12 +31,9 @@ public class Lemmatizer {
     public static Map<String, LemmaCollection> getLemmaCollections(Set<PageDto> set) {
         Map<String, LemmaCollection> lemmaSet = new HashMap<>();
         set.forEach(e -> {
-                    LemmaCollection lemma = new LemmaCollection(uniqueWordCounter(getTitleText(e.getHtml())),
-                            uniqueWordCounter(getBodyText(e.getHtml())), e.getId(), e.getSiteId());
-                    lemmaSet.put(e.getUrl(), lemma);
-//                    if (lemmaSet.size() % 25 == 0) {
-//                        log.info("Лемматизация в процессе - " + e.getUrl() + " " + e.getSiteId() + " " + e.getId());
-//                    }
+            LemmaCollection lemma = new LemmaCollection(uniqueWordCounter(getTitleText(e.getHtml())),
+                    uniqueWordCounter(getBodyText(e.getHtml())), e.getId(), e.getSiteId());
+            lemmaSet.put(e.getUrl(), lemma);
         });
         return new HashMap<>(lemmaSet);
     }
@@ -48,7 +45,6 @@ public class Lemmatizer {
             if (!word.isEmpty() && word.matches("[а-яё]+")) {
                 List<String> wordBaseForms = luceneMorph.getMorphInfo(word);
                 for (String wordBase : wordBaseForms) {
-//                    if (!isServiceWord(wordBase))
                     if (!wordBase.contains("ПРЕДЛ") && !wordBase.contains("СОЮЗ") &&
                             !wordBase.contains("МЕЖД") && !wordBase.contains("ЧАСТ")) {
                         uniqueWords.add(wordBase.replaceAll("([А-яЁё]+)(|)(.*)", "$1"));

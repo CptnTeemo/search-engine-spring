@@ -66,10 +66,6 @@ public class Lemma implements Comparable<Lemma> {
 
     @Override
     public String toString() {
-        return "Лемма: " + getLemma()
-//                + ", частота: " + getFrequency() + "\n" +
-//                "страницы: " + getIndexes().size() + "\n" +
-//                "путь страницы 0: " + getIndexes().size()
-                ;
+        return "Лемма: " + getLemma();
     }
 }

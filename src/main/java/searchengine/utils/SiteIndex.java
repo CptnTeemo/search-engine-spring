@@ -136,11 +136,4 @@ public class SiteIndex implements Runnable {
         return "";
     }
 
-//    private void insertDataInFieldTable() {
-//        List<Field> fields = new ArrayList<>();
-//        fields.add(new Field("title", "title", 1F));
-//        fields.add(new Field("body", "body", 0.8F));
-//        fieldRepository.saveAll(fields);
-//    }
-
 }

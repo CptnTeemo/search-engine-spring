@@ -15,7 +15,6 @@ import java.util.*;
 @Slf4j
 public class Indexing {
 
-//    private final FieldRepository fieldRepository;
     private List<IndexDto> indexDtoList;
 
     public List<IndexDto> getIndexDtoList() {

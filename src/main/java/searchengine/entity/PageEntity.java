@@ -17,7 +17,7 @@ public class PageEntity {
     @Id
     @Column(nullable = false)
     private Integer id;
-    @Column(name = "path", nullable = false, /*unique = true,*/ columnDefinition = "VARCHAR(500)")
+    @Column(name = "path", nullable = false, columnDefinition = "VARCHAR(500)")
     private String path;
     @Column(name = "code", nullable = false)
     private Integer code;

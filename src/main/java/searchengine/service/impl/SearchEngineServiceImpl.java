@@ -79,14 +79,11 @@ public class SearchEngineServiceImpl implements SearchEngineService {
                 for (int i = offset; i < limit; i++) {
                     result.add(dataList.get(i));
                 }
-                result.forEach(e -> log.info("1st result " + e));
                 return result;
             } else {
-                dataList.forEach(e -> log.info("dataList " + e));
                 return dataList;
             }
         } else {
-            result.forEach(e -> log.info("2nd result " + e));
             return result;
         }
     }
